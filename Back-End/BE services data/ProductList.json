@@ -1,0 +1,32 @@
+{
+      "ProductList": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "integer",
+            "description": "The unique identifier for the product."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the product."
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "description": "The price of the product."
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "URL of the product image."
+          },
+          "typeofMeat": {
+            "type": "string",
+            "example": "Beef"
+          },
+          "supermarket_id": {
+            "type": "integer",
+            "example": 1
+          }
+        }
+      }
+}
