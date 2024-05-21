@@ -1,0 +1,17 @@
+{
+      "SupermarketDetails": {
+        "type": "object",
+        "properties": {
+          "supermarket_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "location": {
+            "$ref": "#/components/schemas/Location"
+          }
+        }
+      }
+}
