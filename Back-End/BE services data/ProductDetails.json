@@ -1,0 +1,89 @@
+{
+      "ProductDetails": {
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "float"
+          },
+          "image_url": {
+            "type": "string",
+            "description": "URL to the product image."
+          },
+          "details": {
+            "type": "object",
+            "properties": {
+              "producer": {
+                "type": "string",
+                "example": "Monte do Pasto"
+              },
+              "origin": {
+                "type": "string",
+                "example": "Alentejo, Portugal"
+              },
+              "sex": {
+                "type": "string",
+                "example": "Female"
+              },
+              "age": {
+                "type": "string",
+                "example": "10A 2M"
+              },
+              "race": {
+                "type": "string",
+                "example": "Alentejana"
+              },
+              "more_info": {
+                "type": "object",
+                "properties": {
+                  "feeding": {
+                    "type": "string",
+                    "example": "Only fed with natural grass"
+                  },
+                  "care": {
+                    "type": "string",
+                    "example": "Regular check-ups, free-range living"
+                  },
+                  "slaughter": {
+                    "type": "string",
+                    "example": "Humane conditions, minimized stress"
+                  }
+                }
+              }
+            }
+          },
+          "nutritional_info": {
+            "type": "object",
+            "properties": {
+              "calories": {
+                "type": "integer",
+                "example": 250
+              },
+              "protein": {
+                "type": "number",
+                "format": "float",
+                "example": 26.5
+              },
+              "fat": {
+                "type": "number",
+                "format": "float",
+                "example": 15.2
+              }
+            }
+          },
+          "feedback": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeedbackItem"
+            }
+          }
+        }
+      }
+}
