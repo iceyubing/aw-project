@@ -1,0 +1,25 @@
+{
+      "NewsDetail": {
+        "type": "object",
+        "properties": {
+          "news_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "date_published": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+}
