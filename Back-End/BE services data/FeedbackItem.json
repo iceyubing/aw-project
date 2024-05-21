@@ -1,0 +1,24 @@
+{
+      "FeedbackItem": {
+        "type": "object",
+        "properties": {
+          "feedback_id": {
+            "type": "integer"
+          },
+          "user": {
+            "type": "string",
+            "example": "Paulo Seixo"
+          },
+          "rating": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Rating given by the user, from 1 to 5 stars",
+            "example": 5
+          },
+          "comment": {
+            "type": "string",
+            "example": "Excellent quality!"
+          }
+        }
+      }
+}
