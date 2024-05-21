@@ -1,0 +1,25 @@
+{
+      "NewsList": {
+        "type": "object",
+        "properties": {
+          "news_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "date_published": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+}
