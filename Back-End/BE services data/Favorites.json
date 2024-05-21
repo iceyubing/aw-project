@@ -1,0 +1,17 @@
+{
+      Favorites": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductDetails"
+            }
+          }
+        }
+      }
+}
