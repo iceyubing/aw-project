@@ -1,0 +1,913 @@
+openapi: 3.0.3
+info:
+  title: QRMeat - OpenAPI 3.0
+  description: |-
+    This project demonstrates the application of API design principles and is part of a school assignment.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+servers:
+  - url: https://petstore3.swagger.io/api/v3
+tags:
+  - name: User Authentication
+    description: Provides endpoints for user registration, authentication, and user profile management.
+  - name: Product 
+    description: Manages product catalog including creating, updating, retrieving, and deleting product information.
+  - name: Supermarket 
+    description: Handles all operations related to supermarkets such as listing, detail retrieval, addition, and updates.
+  - name: Favorites
+    description: Manages user favorites including adding, retrieving, and removing favorite products.
+  - name: News
+    description: Provides functionality for news management, including publishing, updating, and fetching news articles.
+  - name: Feedback
+    description: Covers endpoints for submitting and viewing feedback on products.
+  - name: QR scanner
+    description: Includes endpoints for scanning QR codes to quickly access product details.
+  - name: Google Map
+    description: Operations related to integrating and displaying Google Maps for supermarket locations.
+paths:
+  /Authentication/users:
+    get:
+      tags:
+        - Authentication Management
+      summary: Retrieve all users
+      description: Retrieves a list of all users. Requires admin privileges.
+      responses:
+        '200':
+          description: Successfully retrieved user details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDetails' 
+        '403':
+          description: Access denied
+      security:
+        - ApiKeyAuth: []
+    post:
+      tags:
+        - Authentication Management
+      summary: Create a new user
+      description: Creates a new user with the provided credentials.
+      operationId: createUser
+      requestBody:
+        description: User credentials needed to create a new user.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCredentials'
+        required: true
+      responses:
+        '200':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+      security:
+        - ApiKeyAuth: []
+  /Authentication/users/{user_id}:
+    get:
+      tags:
+        - Authentication Management
+      summary: Retrieve user details by ID
+      description: Retrieves the details of a user. Use the user_id parameter to select the user you want to retrieve.
+      operationId: getUserById
+      parameters:
+        - name: user_id
+          in: path
+          description: The ID of the user to retrieve.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved user details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails' 
+        '400':
+          description: Invalid user ID supplied
+        '404':
+          description: User not found
+      security:
+        - ApiKeyAuth: []
+    put:
+      tags:
+        - Authentication Management
+      summary: Update user details by ID
+      description: Updates an existing user's details. This operation can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+        - name: user_id
+          in: path
+          description: The ID of the user to update.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        description: User credentials to update the existing user.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCredentials'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+      security:
+        - ApiKeyAuth: []
+        
+    delete:
+      tags:
+        - Authentication Management
+      summary: Delete user by ID
+      description: Deletes a user by ID. This operation can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+        - name: user_id
+          in: path
+          description: The ID of the user to delete.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: User deleted successfully
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+      security:
+        - ApiKeyAuth: []
+  /ProductService/products:
+    get:
+      tags:
+        - Product Management
+      summary: Retrieve products by supermarket and type of meat
+      description: Retrieves a list of products available in a specific supermarket filtered by the type of meat.
+      parameters:
+        - in: query
+          name: supermarket_id
+          schema:
+            type: integer
+          description: The ID of the supermarket to filter by.
+          required: true
+        - in: query
+          name: typeofMeat
+          schema:
+            type: string
+          description: The type of meat to filter by (e.g., Beef, Pork, Chicken).
+          required: true
+      responses:
+        '200':
+          description: Successfully retrieved all products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductList'
+        '404':
+          description: No products found for the given supermarket and type of meat
+      security:
+        - ApiKeyAuth: []
+    post:
+      tags:
+        - Product Management
+      summary: Create a new product
+      description: Adds a new product to the store.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDetails'
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetails'
+      security:
+        - ApiKeyAuth: []
+  /ProductService/products/{product_id}:
+    get:
+      tags:
+        - Product Management
+      summary: Retrieve a product by ID
+      description: Retrieves detailed information about a specific product.
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetails'
+      security:
+        - ApiKeyAuth: []
+    put:
+      tags:
+        - Product Management
+      summary: Update a product
+      description: Updates an existing product's details.
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDetails'
+      responses:
+        '200':
+          description: Product updated successfully
+      security:
+        - ApiKeyAuth: []
+        
+    delete:
+      tags:
+        - Product Management
+      summary: Delete a product
+      description: Removes a product from the store.
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Product deleted successfully
+      security:
+        - ApiKeyAuth: []
+        
+  /SupermarketService/supermarkets:
+    get:
+      tags:
+        - Supermarket Management
+      summary: Retrieve all supermarkets
+      description: Retrieves a list of all supermarkets.
+      operationId: getAllSupermarkets
+      responses:
+        '200':
+          description: Successfully retrieved all supermarkets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SupermarketDetails'
+        '400':
+          description: Invalid tag value
+      security:
+        - ApiKeyAuth: []
+    post:
+      tags:
+        - Supermarket Management
+      summary: Create a new supermarket
+      description: Adds a new supermarket to the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupermarketDetails'
+      responses:
+        '201':
+          description: Supermarket created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupermarketDetails'
+        '400':
+          description: Invalid input
+      security:
+        - ApiKeyAuth: []
+  
+  /SupermarketService/supermarkets/{supermarket_id}:
+    put:
+      tags:
+        - Supermarket Management
+      summary: Update supermarket details
+      description: Updates the details of an existing supermarket.
+      operationId: updateSupermarket
+      parameters:
+        - name: supermarket_id
+          in: path
+          description: supermarket's ID that is to be updated
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update the details of an existing supermarket
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupermarketDetails'
+      responses:
+        '200':
+          description: Successfully updated supermarket details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupermarketDetails'
+        '400':
+          description: Invalid input
+        '404':
+          description: Supermarket not found
+      security:
+        - ApiKeyAuth: []
+        
+    delete:
+      tags:
+        - Supermarket Management
+      summary: Delete a supermarket
+      description: Deletes a supermarket by ID.
+      operationId: deleteSupermarket
+      parameters:
+        - name: supermarket_id
+          in: path
+          description: The ID of the supermarket to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Supermarket deleted successfully
+      security:
+        - ApiKeyAuth: []
+  /FavoritesService/favorites/{user_id}:        
+    get:
+      tags:
+        - Favorites Management
+      summary: Retrieve all favorite items for a user
+      description: Retrieves a list of all favorite items associated with a specific user.
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of favorite items retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Favorites'
+        '404':
+          description: User not found
+      security:
+        - ApiKeyAuth: []
+        
+    post:
+      tags:
+        - Favorites Management
+      summary: Add a product to user's favorites
+      description: Adds a specific product to the user's list of favorite items.
+      operationId: addFavoriteItem
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the user to add the favorite product to.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: integer
+                  format: int32
+                  description: The ID of the product to be added to favorites.
+      responses:
+        '201':
+          description: Product added to favorites successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Favorites'
+        '400':
+          description: Invalid input
+      security:
+        - ApiKeyAuth: []
+
+    delete:
+      tags:
+        - Favorites Management
+      summary: Remove a product from user's favorites
+      description: Removes a specific product from the user's list of favorite items.
+      operationId: removeFavoriteItem
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: product_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Product removed from favorites successfully.
+        '404':
+          description: User or product not found
+      security:
+        - ApiKeyAuth: []
+
+  /NewsService/news:
+    get:
+      tags:
+        - News Management
+      summary: Retrieve all news items
+      description: Retrieves a list of all news items.
+      operationId: getAllNewsItems
+      responses:
+        '200':
+          description: Successfully retrieved all news items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NewsList'
+      security:
+        - ApiKeyAuth: []
+    post:
+      tags:
+        - News Management
+      summary: Create a news item
+      description: Adds a new news item to the system.
+      operationId: createNewsItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewsDetail'
+      responses:
+        '201':
+          description: News item created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsDetail'
+      security:
+        - ApiKeyAuth: []
+  /NewsService/news/{news_id}:
+    get:
+      tags:
+        - News Management
+      summary: Retrieve details of a specific news item
+      description: Retrieves detailed information about a specific news item.
+      parameters:
+        - in: path
+          name: news_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved news details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsDetail'
+        '404':
+          description: News item not found
+      security:
+        - ApiKeyAuth: []
+    put:
+      tags:
+        - News Management
+      summary: Update a news item
+      description: Updates an existing news item.
+      parameters:
+        - name: news_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewsDetail'
+      responses:
+        '200':
+          description: News item updated successfully
+      security:
+        - ApiKeyAuth: []
+    delete:
+      tags:
+        - News Management
+      summary: Delete a news item
+      description: Removes a news item from the system.
+      parameters:
+        - name: news_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: News item deleted successfully
+      security:
+        - ApiKeyAuth: []
+        
+  /QRScanner/scan:
+    post:
+      tags:
+        - QR Scanner
+      summary: Scan a QR code
+      description: Processes a QR code to retrieve product details.
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: QR code processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetails'
+        '400':
+          description: Invalid QR code format
+      security:
+        - ApiKeyAuth: []
+        
+  /FeedbackService/feedback:
+    post:
+      tags:
+        - Feedback Management
+      summary: Submit feedback for a product
+      description: Submits feedback for a product.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitFeedback'
+      responses:
+        '201':
+          description: Feedback submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitFeedback'
+        '400':
+          description: Invalid input
+      security:
+        - ApiKeyAuth: []
+  /FeedbackService/feedback/{product_id}:
+    get:
+      tags:
+        - Feedback Management
+      summary: Retrieve all feedback for a specific product
+      description: Retrieves a list of all feedback items for a specified product.
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the product for which to retrieve feedback.
+      responses:
+        '200':
+          description: Successfully retrieved feedback
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeedbackItem'
+        '404':
+          description: Product not found
+      security:
+      - ApiKeyAuth: []
+  /FeedbackService/feedback/{feedback_id}:
+    put:
+      tags:
+        - Feedback Management
+      summary: Update existing feedback
+      description: Updates an existing feedback entry for a product.
+      parameters:
+        - in: path
+          name: feedback_id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the feedback entry to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitFeedback'
+      responses:
+        '200':
+          description: Feedback updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitFeedback'
+        '400':
+          description: Invalid input
+        '404':
+          description: Feedback not found
+      security:
+        - ApiKeyAuth: []
+    delete:
+      tags:
+        - Feedback Management
+      summary: Delete feedback
+      description: Deletes a feedback entry for a product.
+      parameters:
+        - in: path
+          name: feedback_id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the feedback entry to delete.
+      responses:
+        '204':
+          description: Feedback deleted successfully
+        '404':
+          description: Feedback not found
+      security:
+        - ApiKeyAuth: []
+  /GoogleMapService/locations/{location_id}:
+    get:
+      tags:
+        - Google Map Integration
+      summary: Retrieve specific supermarket location
+      description: Retrieves detailed information about a specific supermarket location.
+      parameters:
+        - name: location_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved location details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+      security:
+        - ApiKeyAuth: []
+components:
+  schemas:
+    UserCredentials:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    UserDetails:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        email:
+          type: string
+        authentication_status:
+          type: boolean
+    ProductDetails:
+      type: object
+      properties:
+        product_id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        price:
+          type: number
+          format: float
+        image_url:
+          type: string
+          description: "URL to the product image."
+        details:
+          type: object
+          properties:
+            producer:
+              type: string
+              example: "Monte do Pasto"
+            origin:
+              type: string
+              example: "Alentejo, Portugal"
+            sex:
+              type: string
+              example: "Female"
+            age:
+              type: string
+              example: "10A 2M"
+            race:
+              type: string
+              example: "Alentejana"
+            more_info:
+              type: object
+              properties:
+                feeding:
+                  type: string
+                  example: "Only fed with natural grass"
+                care:
+                  type: string
+                  example: "Regular check-ups, free-range living"
+                slaughter:
+                  type: string
+                  example: "Humane conditions, minimized stress"
+        nutritional_info:
+          type: object
+          properties:
+            calories:
+              type: integer
+              example: 250
+            protein:
+              type: number
+              format: float
+              example: 26.5
+            fat:
+              type: number
+              format: float
+              example: 15.2
+        feedback:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeedbackItem'
+    ProductList:
+      type: object
+      properties:
+        productId:
+          type: integer
+          description: The unique identifier for the product.
+        name:
+          type: string
+          description: The name of the product.
+        price:
+          type: number
+          format: float
+          description: The price of the product.
+        imageUrl:
+          type: string
+          description: URL of the product image.
+        typeofMeat: 
+          type: string
+          example: "Beef"
+        supermarket_id:
+          type: integer
+          example: 1
+    SupermarketDetails:
+      type: object
+      properties:
+        supermarket_id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        location:
+          $ref: '#/components/schemas/Location'
+    Favorites:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          format: int32
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductDetails'
+    NewsList:
+      type: object
+      properties:
+        news_id:
+          type: integer
+          format: int32
+        title:
+          type: string
+        summary:
+          type: string
+        imageUrl:
+          type: string
+          format: uri
+        date_published:
+          type: string
+          format: date
+    NewsDetail:
+      type: object
+      properties:
+        news_id:
+          type: integer
+          format: int32
+        title:
+          type: string
+        content:
+          type: string
+        imageUrl:
+          type: string
+          format: uri
+        date_published:
+          type: string
+          format: date
+
+    FeedbackItem:
+      type: object
+      properties:
+        feedback_id:
+          type: integer
+        user:
+          type: string
+          example: 'Paulo Seixo'
+        rating:
+          type: integer
+          format: int32
+          description: 'Rating given by the user, from 1 to 5 stars'
+          example: 5
+        comment:
+          type: string
+          example: 'Excellent quality!'
+        
+    SubmitFeedback:
+      type: object
+      required:
+        - user_id
+        - product_id
+        - rating
+      properties:
+        user_id:
+          type: integer
+          format: int32
+          description: 'ID of the user submitting the feedback'
+        product_id:
+          type: integer
+          format: int32
+          description: 'ID of the product being reviewed'
+        rating:
+          type: integer
+          format: int32
+          description: 'Rating from 1 to 5 stars'
+        comment:
+          type: string
+          description: 'Optional comment for the feedback'
+    Location:
+      type: object
+      properties:
+        location_id:
+          type: integer
+          format: int32
+        supermarket_id:
+          type: integer
+          format: int32
+        coordinates:
+          type: object
+          properties:
+            latitude:
+              type: number
+              format: double
+            longitude:
+              type: number
+              format: double
+  securitySchemes:
+    ApiKeyAuth: 
+      type: apiKey
+      in: header
+      name: X-API-Key
