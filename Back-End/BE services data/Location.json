@@ -1,0 +1,28 @@
+{
+      "Location": {
+        "type": "object",
+        "properties": {
+          "location_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supermarket_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "coordinates": {
+            "type": "object",
+            "properties": {
+              "latitude": {
+                "type": "number",
+                "format": "double"
+              },
+              "longitude": {
+                "type": "number",
+                "format": "double"
+              }
+            }
+          }
+        }
+      }
+}
