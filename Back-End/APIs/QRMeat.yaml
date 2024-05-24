@@ -30,11 +30,11 @@ paths:
   /Authentication/users:
     get:
       tags:
-        - Authentication Management
+        - User Authentication
       summary: Retrieve all users
       description: Retrieves a list of all users. Requires admin privileges.
       responses:
-        '200':
+        '201':
           description: Successfully retrieved user details
           content:
             application/json:
@@ -48,7 +48,7 @@ paths:
         - ApiKeyAuth: []
     post:
       tags:
-        - Authentication Management
+        - User Authentication
       summary: Create a new user
       description: Creates a new user with the provided credentials.
       operationId: createUser
@@ -75,7 +75,7 @@ paths:
   /Authentication/users/{user_id}:
     get:
       tags:
-        - Authentication Management
+        - User Authentication
       summary: Retrieve user details by ID
       description: Retrieves the details of a user. Use the user_id parameter to select the user you want to retrieve.
       operationId: getUserById
@@ -101,7 +101,7 @@ paths:
         - ApiKeyAuth: []
     put:
       tags:
-        - Authentication Management
+        - User Authentication
       summary: Update user details by ID
       description: Updates an existing user's details. This operation can only be done by the logged in user.
       operationId: updateUser
@@ -131,7 +131,7 @@ paths:
         
     delete:
       tags:
-        - Authentication Management
+        - User Authentication
       summary: Delete user by ID
       description: Deletes a user by ID. This operation can only be done by the logged in user.
       operationId: deleteUser
@@ -154,7 +154,7 @@ paths:
   /ProductService/products:
     get:
       tags:
-        - Product Management
+        - Product
       summary: Retrieve products by supermarket and type of meat
       description: Retrieves a list of products available in a specific supermarket filtered by the type of meat.
       parameters:
@@ -185,7 +185,7 @@ paths:
         - ApiKeyAuth: []
     post:
       tags:
-        - Product Management
+        - Product
       summary: Create a new product
       description: Adds a new product to the store.
       requestBody:
@@ -206,7 +206,7 @@ paths:
   /ProductService/products/{product_id}:
     get:
       tags:
-        - Product Management
+        - Product
       summary: Retrieve a product by ID
       description: Retrieves detailed information about a specific product.
       parameters:
@@ -226,7 +226,7 @@ paths:
         - ApiKeyAuth: []
     put:
       tags:
-        - Product Management
+        - Product
       summary: Update a product
       description: Updates an existing product's details.
       parameters:
@@ -249,7 +249,7 @@ paths:
         
     delete:
       tags:
-        - Product Management
+        - Product
       summary: Delete a product
       description: Removes a product from the store.
       parameters:
@@ -267,7 +267,7 @@ paths:
   /SupermarketService/supermarkets:
     get:
       tags:
-        - Supermarket Management
+        - Supermarket
       summary: Retrieve all supermarkets
       description: Retrieves a list of all supermarkets.
       operationId: getAllSupermarkets
@@ -286,7 +286,7 @@ paths:
         - ApiKeyAuth: []
     post:
       tags:
-        - Supermarket Management
+        - Supermarket
       summary: Create a new supermarket
       description: Adds a new supermarket to the system.
       requestBody:
@@ -310,7 +310,7 @@ paths:
   /SupermarketService/supermarkets/{supermarket_id}:
     put:
       tags:
-        - Supermarket Management
+        - Supermarket
       summary: Update supermarket details
       description: Updates the details of an existing supermarket.
       operationId: updateSupermarket
@@ -343,7 +343,7 @@ paths:
         
     delete:
       tags:
-        - Supermarket Management
+        - Supermarket
       summary: Delete a supermarket
       description: Deletes a supermarket by ID.
       operationId: deleteSupermarket
@@ -362,7 +362,7 @@ paths:
   /FavoritesService/favorites/{user_id}:        
     get:
       tags:
-        - Favorites Management
+        - Favorites
       summary: Retrieve all favorite items for a user
       description: Retrieves a list of all favorite items associated with a specific user.
       parameters:
@@ -385,7 +385,7 @@ paths:
         
     post:
       tags:
-        - Favorites Management
+        - Favorites
       summary: Add a product to user's favorites
       description: Adds a specific product to the user's list of favorite items.
       operationId: addFavoriteItem
@@ -421,7 +421,7 @@ paths:
 
     delete:
       tags:
-        - Favorites Management
+        - Favorites
       summary: Remove a product from user's favorites
       description: Removes a specific product from the user's list of favorite items.
       operationId: removeFavoriteItem
@@ -447,7 +447,7 @@ paths:
   /NewsService/news:
     get:
       tags:
-        - News Management
+        - News
       summary: Retrieve all news items
       description: Retrieves a list of all news items.
       operationId: getAllNewsItems
@@ -464,7 +464,7 @@ paths:
         - ApiKeyAuth: []
     post:
       tags:
-        - News Management
+        - News
       summary: Create a news item
       description: Adds a new news item to the system.
       operationId: createNewsItem
@@ -486,7 +486,7 @@ paths:
   /NewsService/news/{news_id}:
     get:
       tags:
-        - News Management
+        - News
       summary: Retrieve details of a specific news item
       description: Retrieves detailed information about a specific news item.
       parameters:
@@ -508,7 +508,7 @@ paths:
         - ApiKeyAuth: []
     put:
       tags:
-        - News Management
+        - News
       summary: Update a news item
       description: Updates an existing news item.
       parameters:
@@ -530,7 +530,7 @@ paths:
         - ApiKeyAuth: []
     delete:
       tags:
-        - News Management
+        - News
       summary: Delete a news item
       description: Removes a news item from the system.
       parameters:
@@ -548,7 +548,7 @@ paths:
   /QRScanner/scan:
     post:
       tags:
-        - QR Scanner
+        - QR scanner
       summary: Scan a QR code
       description: Processes a QR code to retrieve product details.
       requestBody:
@@ -573,7 +573,7 @@ paths:
   /FeedbackService/feedback:
     post:
       tags:
-        - Feedback Management
+        - Feedback
       summary: Submit feedback for a product
       description: Submits feedback for a product.
       requestBody:
@@ -596,7 +596,7 @@ paths:
   /FeedbackService/feedback/{product_id}:
     get:
       tags:
-        - Feedback Management
+        - Feedback
       summary: Retrieve all feedback for a specific product
       description: Retrieves a list of all feedback items for a specified product.
       parameters:
@@ -622,7 +622,7 @@ paths:
   /FeedbackService/feedback/{feedback_id}:
     put:
       tags:
-        - Feedback Management
+        - Feedback
       summary: Update existing feedback
       description: Updates an existing feedback entry for a product.
       parameters:
@@ -653,7 +653,7 @@ paths:
         - ApiKeyAuth: []
     delete:
       tags:
-        - Feedback Management
+        - Feedback
       summary: Delete feedback
       description: Deletes a feedback entry for a product.
       parameters:
@@ -673,7 +673,7 @@ paths:
   /GoogleMapService/locations/{location_id}:
     get:
       tags:
-        - Google Map Integration
+        - Google Map
       summary: Retrieve specific supermarket location
       description: Retrieves detailed information about a specific supermarket location.
       parameters:
